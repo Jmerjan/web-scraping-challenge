@@ -6,7 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from splinter import Browser
 import time
 
-def scrape():
+def scraper():
 
     #setup splinter
     executable_path = {'executable_path': ChromeDriverManager().install()}
@@ -38,6 +38,7 @@ def scrape():
     table = pd.read_html(table_url)
     df = table[0]
     df.set_index(0)
+    df.columns={'', 'Mars', 'Earth'}
     mars_html=df.to_html(index=False)
 
     soup = bs(response, 'html.parser')
@@ -67,7 +68,7 @@ def scrape():
         title= hem.find('h3').text
         title_list.append(title)
     
-    #find image through anchor tag
+        #find image through anchor tag
         img_url=hem.find('a', class_='itemLink product-item')['href']
     
         browser.visit(hem_url + img_url)
@@ -81,7 +82,7 @@ def scrape():
     
         hem_list_dict.append({"title": title, "img_url": hem_img_url})
 
-        print(hem_list_dict, hem_img_url )
+        
 
 
     mars_data={
@@ -89,16 +90,8 @@ def scrape():
         "mars_news_p": news_p,
         "mars_feat_img": featured_image_url,
         "mars_table":mars_html,
-        "hem_img_0": hem_list_dict[0]['img_url'],
-        "hem_img_1": hem_img_url[1],
-        "hem_img_2": hem_img_url[2],
-        "hem_img_3": hem_img_url[3],
-        "hem_title_0":hem_list_dict[0]['title'],
-        "hem_title_1":hem_list_dict[1]['title'],
-        "hem_title_2":hem_list_dict[2]['title'],
-        "hem_title_3":hem_list_dict[3]['title']
+        "hem_dict": hem_list_dict
     }
-
-    print(mars_data)
+    
     browser.quit()
     return mars_data
